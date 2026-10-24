@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Parda AI — Privacy Veil for Cloud LLMs",
+  "version": "1.0.0",
+  "description": "On-device privacy veil that redacts personal and financial identifiers before they touch ChatGPT, Gemini, and Claude.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://*.chatgpt.com/*",
+    "https://gemini.google.com/*",
+    "https://claude.ai/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://*.chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://claude.ai/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles/veil.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

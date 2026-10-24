@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 320px;
+      margin: 0;
+      padding: 16px;
+      background: #0F172A;
+      color: #F8FAFC;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1E293B;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .switch-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1E293B;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .switch-label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+    }
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #475569;
+      transition: .2s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #3B82F6;
+    }
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #94A3B8;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .status-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #34D399;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .footer-link {
+      text-align: center;
+      font-size: 11px;
+    }
+    .footer-link a {
+      color: #38BDF8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="logo">P</div>
+      <div class="title">Parda AI</div>
+    </div>
+    <span style="font-size: 11px; color: #94A3B8;">v1.0.0</span>
+  </div>
+
+  <div class="status-box">
+    <span>🛡️</span> Zero Cloud Leakage active on ChatGPT, Gemini & Claude.
+  </div>
+
+  <div class="switch-wrap">
+    <span class="switch-label">Privacy Shield</span>
+    <label class="toggle">
+      <input type="checkbox" id="shieldToggle" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="switch-wrap">
+    <span class="switch-label">Auto De-Anonymize Output</span>
+    <label class="toggle">
+      <input type="checkbox" id="deanonToggle" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="footer-link">
+    <a href="https://github.com/AlphaAI-dev/Parda" target="_blank">Open Source on GitHub ↗</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

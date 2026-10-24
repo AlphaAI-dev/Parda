@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parda AI — Intelligent Privacy Veil for Cloud LLMs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090D16;
+      --bg-card: #111827;
+      --bg-panel: #1A2234;
+      --border-subtle: #273142;
+      --border-active: #3B82F6;
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --accent-teal: #06B6D4;
+      --accent-green: #10B981;
+      --accent-amber: #F59E0B;
+      --accent-rose: #F43F5E;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #FFF;
+      font-size: 1.15rem;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    }
+    .brand-text h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--accent-teal);
+      font-weight: 600;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .repo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .repo-pill:hover {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: var(--primary);
+      color: #93C5FD;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-green);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .hero-info h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .hero-info p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      max-width: 860px;
+      line-height: 1.5;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 0.85rem 1.25rem;
+      border-radius: 10px;
+    }
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .group-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .preset-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--primary);
+      color: #93C5FD;
+    }
+
+    .pill-switch {
+      display: flex;
+      background: var(--bg-panel);
+      border-radius: 8px;
+      padding: 3px;
+      border: 1px solid var(--border-subtle);
+    }
+    .pill-btn {
+      padding: 0.35rem 0.85rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill-btn.active {
+      background: var(--primary);
+      color: #FFF;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Workspace 3-column layout */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 340px;
+      gap: 1.25rem;
+      flex: 1;
+    }
+    @media (max-width: 1100px) {
+      .workspace-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .panel-head {
+      background: rgba(26, 34, 52, 0.6);
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .panel-head h3 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .head-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .action-btn:hover {
+      background: var(--bg-panel);
+      color: var(--text-main);
+    }
+
+    .panel-content {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    textarea.doc-textarea {
+      width: 100%;
+      height: 380px;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+    }
+    .view-content {
+      width: 100%;
+      height: 380px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #E2E8F0;
+    }
+
+    /* Inspector */
+    .inspector-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .inspector-head {
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .entity-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 480px;
+    }
+    .entity-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .entity-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .entity-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .tag-global { background: rgba(59, 130, 246, 0.2); color: #93C5FD; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .tag-regional { background: rgba(245, 158, 11, 0.2); color: #FCD34D; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .tag-secret { background: rgba(244, 63, 94, 0.2); color: #FDA4AF; border: 1px solid rgba(244, 63, 94, 0.4); }
+
+    .entity-val {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #F1F5F9;
+      word-break: break-all;
+    }
+    .entity-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Two-Way Cloud AI Simulator */
+    .simulator-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .sim-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-panel);
+      padding: 1.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+    @media (max-width: 900px) {
+      .pipeline-grid { grid-template-columns: 1fr; }
+    }
+    .step-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .step-box h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .step-content {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      color: #CBD5E1;
+      min-height: 80px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .arrow-icon {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .btn-shield-main {
+      background: linear-gradient(135deg, #2563EB, #4F46E5);
+      color: #FFF;
+      border: none;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-shield-main:hover {
+      background: linear-gradient(135deg, #1D4ED8, #4338CA);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-badge">P</div>
+      <div class="brand-text">
+        <h2>Parda AI</h2>
+        <span>Intelligent Privacy Veil for Cloud LLMs</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        100% Client-Side • Zero Cloud Leakage
+      </div>
+      <a class="repo-pill" href="https://github.com/AlphaAI-dev/Parda" target="_blank">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        AlphaAI-dev/Parda ↗
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <main>
+    <!-- Hero / Pitch -->
+    <section class="hero-banner">
+      <div class="hero-info">
+        <h1>🛡️ The Client-Side Privacy Veil for Gemini, ChatGPT & Claude</h1>
+        <p>
+          Never paste confidential credentials, personal IDs, or financial accounts directly into cloud chatbots.
+          <strong>Parda</strong> acts as an on-device privacy veil that detects, masks, and sanitizes global and regional PII locally on your laptop before data leaves your browser—and automatically re-hydrates responses privately upon return.
+        </p>
+      </div>
+      <div>
+        <button class="btn-shield-main" onclick="triggerPardaShield()">
+          <span>⚡</span> Activate Parda Veil
+        </button>
+      </div>
+    </section>
+
+    <!-- Controls & Presets -->
+    <section class="controls-bar">
+      <div class="btn-group">
+        <span class="group-label">Load Preset:</span>
+        <button class="preset-btn active" onclick="loadDocPreset('global')">🌐 Global FinTech & Secrets</button>
+        <button class="preset-btn" onclick="loadDocPreset('indian_legal')">🏛️ Indian Legal & KYC</button>
+        <button class="preset-btn" onclick="loadDocPreset('customer_support')">🎧 Customer Support Ticket</button>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span class="group-label">Masking Style:</span>
+        <div class="pill-switch">
+          <button class="pill-btn active" onclick="switchMaskStyle('TOKEN', this)">Tokenized Reversible</button>
+          <button class="pill-btn" onclick="switchMaskStyle('BLACKOUT', this)">Blackout (████)</button>
+          <button class="pill-btn" onclick="switchMaskStyle('SYNTHETIC', this)">Synthetic Fake</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspace -->
+    <div class="workspace-grid">
+      <!-- Left Panel: Raw Input -->
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3><span>📝</span> Confidential Document Input</h3>
+          <div class="head-actions">
+            <button class="action-btn" onclick="clearDocument()">Clear</button>
+            <button class="action-btn" onclick="copyRaw()">Copy</button>
+          </div>
+        </div>
+        <div class="panel-content">
+          <textarea id="rawDocInput" class="doc-textarea" spellcheck="false" placeholder="Type or paste your document, code, or query here..."></textarea>
+        </div>
+      </div>
+
+      <!-- Middle Panel: Sanitized Output -->
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3><span>🔒</span> Parda Sanitized Output (Cloud Safe)</h3>
+          <div class="head-actions">
+            <button class="action-btn" onclick="copySanitized()">Copy Safe Text</button>
+            <button class="action-btn" onclick="downloadSanitized()">Export .txt</button>
+          </div>
+        </div>
+        <div class="panel-content">
+          <div id="sanitizedView" class="view-content"></div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Telemetry Inspector -->
+      <div class="inspector-card">
+        <div class="inspector-head">
+          <h3 style="font-size: 0.88rem;">Veil Telemetry</h3>
+          <span id="shieldCountTag" class="tag-global" style="background: rgba(16, 185, 129, 0.2); color: #34D399; border-color: #059669;">
+            0 Detected
+          </span>
+        </div>
+        <div id="telemetryStream" class="entity-stream">
+          <div style="color: var(--text-muted); font-size: 0.82rem; text-align: center; margin-top: 2rem;">
+            Click <strong>Activate Parda Veil</strong> to inspect detected identifiers.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Two-Way Cloud LLM Simulator -->
+    <section class="simulator-box">
+      <div class="sim-top">
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 700;">⚡ Two-Way Cloud LLM Privacy Gateway Simulator</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Inspect what is transmitted over the wire to cloud AI vs. what is privately restored in local memory.
+          </p>
+        </div>
+        <button class="btn-shield-main" style="font-size: 0.82rem; padding: 0.45rem 1rem;" onclick="simulateCloudCall()">
+          Test Cloud AI Query (Gemini / Claude API)
+        </button>
+      </div>
+
+      <div class="pipeline-grid">
+        <div class="step-box">
+          <h4>1. Prompt Sent Across Wire (Zero PII)</h4>
+          <div id="wireSnippet" class="step-content">Payload will appear here. No real cards, IDs, or secrets leave your device.</div>
+        </div>
+        <div class="arrow-icon">➔</div>
+        <div class="step-box">
+          <h4>2. Raw Cloud LLM Output</h4>
+          <div id="cloudSnippet" class="step-content">Cloud AI response using token placeholders...</div>
+        </div>
+        <div class="arrow-icon">➔</div>
+        <div class="step-box">
+          <h4>3. Local Client De-Anonymized Output</h4>
+          <div id="localRestoredSnippet" class="step-content" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); color: #E2E8F0;">
+            Original details safely restored in browser memory.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Luhn mod-10 in JS ---
+    function validateLuhn(numStr) {
+      const clean = numStr.replace(/\D/g, '');
+      if (clean.length < 13 || clean.length > 19) return false;
+      let sum = 0;
+      let alt = false;
+      for (let i = clean.length - 1; i >= 0; i--) {
+        let n = parseInt(clean.charAt(i), 10);
+        if (alt) {
+          n *= 2;
+          if (n > 9) n -= 9;
+        }
+        sum += n;
+        alt = !alt;
+      }
+      return (sum % 10) === 0;
+    }
+
+    // --- Verhoeff Dihedral D5 in JS ---
+    const _D = [
+      [0,1,2,3,4,5,6,7,8,9],[1,2,3,4,0,6,7,8,9,5],[2,3,4,0,1,7,8,9,5,6],[3,4,0,1,2,8,9,5,6,7],[4,0,1,2,3,9,5,6,7,8],
+      [5,9,8,7,6,0,4,3,2,1],[6,5,9,8,7,1,0,4,3,2],[7,6,5,9,8,2,1,0,4,3],[8,7,6,5,9,3,2,1,0,4],[9,8,7,6,5,4,3,2,1,0]
+    ];
+    const _P = [
+      [0,1,2,3,4,5,6,7,8,9],[1,5,7,6,2,8,3,0,9,4],[5,8,0,3,7,9,6,1,4,2],[8,9,1,6,0,4,3,5,2,7],
+      [9,4,5,3,1,2,6,8,7,0],[4,2,8,6,5,7,3,9,0,1],[2,7,9,3,8,0,6,4,1,5],[7,0,4,6,9,1,3,2,5,8]
+    ];
+    function validateVerhoeff(str) {
+      const digits = str.replace(/\D/g, '').split('').map(Number);
+      if (digits.length !== 12) return false;
+      let c = 0;
+      const rev = [...digits].reverse();
+      for (let i = 0; i < rev.length; i++) c = _D[c][_P[i % 8][rev[i]]];
+      return c === 0;
+    }
+
+    // --- Document Presets (Global & Regional) ---
+    const PRESETS = {
+      global: `FINANCIAL COMPLIANCE & INFRASTRUCTURE REPORT
+Lead Architect: Sarah Connor (sarah.connor@cyberdyne.corp)
+Server Bastion IP: 198.51.100.42
+Production AWS Key: AKIAIOSFODNN7EXAMPLE
+Stripe Corporate Visa: 4532 0150 1234 5678 (Exp 08/29)
+Mastercard Billing: 5425 2334 3456 7890
+US Social Security SSN: 219-00-4829
+Direct Wire IBAN: DE89370400440532013000
+
+Please analyze this audit memo and summarize any security exposure.`,
+
+      indian_legal: `RESIDENTIAL LEASE AGREEMENT (NEW DELHI)
+This agreement executed on 12th October 2026 between Landlord Shri Ramesh Kumar Sharma, 
+holding PAN: ABCPS1234F, Aadhaar No: 5432 8901 2345, residing at Sector 14, Rohini, New Delhi - 110085, 
+Contact: +91 98765 43210, Email/UPI: ramesh.sharma@okhdfcbank
+AND
+Tenant Mr. Vikram Malhotra, S/o Late Shri Arvind Malhotra, 
+holding PAN: BKRPM9876Q, Aadhaar No: 9876 5432 1098, Contact: 9811223344, UPI: vikram.malhotra@paytm.
+
+The Tenant shall pay monthly rent of INR 35,000/- directly to Landlord's Bank Account:
+Bank Name: State Bank of India (SBI)
+A/c No: 309876543210
+IFSC Code: SBIN0001234
+Security Deposit: INR 70,000 paid via UPI to ramesh.sharma@okhdfcbank.`,
+
+      customer_support: `CUSTOMER GRIEVANCE TICKET #99482
+Customer Name: David Miller
+Primary Email: david.m@cloudtech.io
+Phone Number: +1 415-555-0199
+Stored Payment Method: 4000 1234 5678 9010 (Verified Visa)
+Secondary UPI ID (India Team): support.refund@okaxis
+Customer notes: "I was charged twice on account 981234567890 with IFSC HDFC0001234. Please refund immediately to my credit card."`
+    };
+
+    let activeMaskStyle = 'TOKEN';
+    let currentVault = {};
+
+    function loadDocPreset(key) {
+      document.getElementById('rawDocInput').value = PRESETS[key];
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      triggerPardaShield();
+    }
+
+    function switchMaskStyle(style, btn) {
+      activeMaskStyle = style;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      triggerPardaShield();
+    }
+
+    // --- Parda Core Detector in JS ---
+    function scanPardaEntities(text) {
+      const matches = [];
+
+      // 1. API Keys & Secrets
+      const apiRegex = /\b(AKIA[0-9A-Z]{16}|ghp_[0-9a-zA-Z]{36}|sk-[a-zA-Z0-9]{32,64})\b/g;
+      let m;
+      while ((m = apiRegex.exec(text)) !== null) {
+        matches.push({ type: 'API_SECRET_KEY', value: m[1], start: m.index, end: m.index + m[1].length, scope: 'GLOBAL', meta: 'Cloud API Secret' });
+      }
+
+      // 2. Emails
+      const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,7}\b/g;
+      while ((m = emailRegex.exec(text)) !== null) {
+        // Skip if upi handle
+        if (!m[0].includes('okaxis') && !m[0].includes('okhdfcbank') && !m[0].includes('paytm') && !m[0].includes('ybl')) {
+          matches.push({ type: 'EMAIL_ADDRESS', value: m[0], start: m.index, end: m.index + m[0].length, scope: 'GLOBAL', meta: 'RFC 5322 Email' });
+        }
+      }
+
+      // 3. Credit Cards (Luhn validated)
+      const ccRegex = /\b(?:\d[ -]*?){13,19}\b/g;
+      while ((m = ccRegex.exec(text)) !== null) {
+        const clean = m[0].replace(/\D/g, '');
+        if (clean.length >= 13 && clean.length <= 19 && validateLuhn(clean)) {
+          matches.push({ type: 'CREDIT_CARD', value: m[0], start: m.index, end: m.index + m[0].length, scope: 'GLOBAL', meta: 'Luhn Mod-10 Verified Card' });
+        }
+      }
+
+      // 4. US SSN
+      const ssnRegex = /\b(?!000|666|9\d{2})\d{3}[- ](?!00)\d{2}[- ](?!0000)\d{4}\b/g;
+      while ((m = ssnRegex.exec(text)) !== null) {
+        matches.push({ type: 'US_SSN', value: m[0], start: m.index, end: m.index + m[0].length, scope: 'GLOBAL', meta: 'Social Security Number' });
+      }
+
+      // 5. IP Addresses
+      const ipRegex = /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g;
+      while ((m = ipRegex.exec(text)) !== null) {
+        matches.push({ type: 'IP_ADDRESS', value: m[0], start: m.index, end: m.index + m[0].length, scope: 'GLOBAL', meta: 'IPv4 Network Address' });
+      }
+
+      // 6. IBAN
+      const ibanRegex = /\b[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}\b/g;
+      while ((m = ibanRegex.exec(text)) !== null) {
+        matches.push({ type: 'BANK_IBAN', value: m[0], start: m.index, end: m.index + m[0].length, scope: 'GLOBAL', meta: 'International Bank Account' });
+      }
+
+      // 7. PAN Card (Regional)
+      const panRegex = /\b([A-Z]{5}[0-9]{4}[A-Z])\b/gi;
+      while ((m = panRegex.exec(text)) !== null) {
+        matches.push({ type: 'PAN_CARD', value: m[1].toUpperCase(), start: m.index, end: m.index + m[1].length, scope: 'REGIONAL', meta: `Entity: ${m[1][3] === 'P' ? 'Individual' : 'Corporate'}` });
+      }
+
+      // 8. Aadhaar Card (Regional)
+      const aadhaarRegex = /\b([2-9][0-9]{3}[\s\-]?[0-9]{4}[\s\-]?[0-9]{4})\b/g;
+      while ((m = aadhaarRegex.exec(text)) !== null) {
+        const clean = m[1].replace(/[\s\-]/g, '');
+        const valid = validateVerhoeff(clean);
+        matches.push({ type: 'AADHAAR_CARD', value: m[1], start: m.index, end: m.index + m[1].length, scope: 'REGIONAL', meta: valid ? 'Verhoeff D5 Checksum: VALID' : '12-Digit Format Match' });
+      }
+
+      // 9. UPI Virtual Address (Regional)
+      const upiRegex = /\b([a-zA-Z0-9._\-]{2,50}@(okhdfcbank|okaxis|oksbi|okicici|paytm|ybl|ibl|upi|axl|apl|barodampay|federal|kotak|gpay|[a-zA-Z]{2,15}))\b/gi;
+      while ((m = upiRegex.exec(text)) !== null) {
+        matches.push({ type: 'UPI_ID', value: m[1], start: m.index, end: m.index + m[1].length, scope: 'REGIONAL', meta: 'NPCI Virtual Payment Address' });
+      }
+
+      // 10. IFSC Code (Regional)
+      const ifscRegex = /\b([A-Z]{4}0[A-Z0-9]{6})\b/gi;
+      while ((m = ifscRegex.exec(text)) !== null) {
+        matches.push({ type: 'BANK_IFSC', value: m[1].toUpperCase(), start: m.index, end: m.index + m[1].length, scope: 'REGIONAL', meta: `Bank Branch: ${m[1].slice(0, 4)}` });
+      }
+
+      // 11. Bank Account (Regional)
+      const accRegex = /(?:(?:a\/c|account(?:\s*no)?|acc(?:\s*num|\s*no)?|खाता(?:\s*संख्या)?)\s*[:#\-]?\s*)([0-9]{9,18})\b/gi;
+      while ((m = accRegex.exec(text)) !== null) {
+        matches.push({ type: 'BANK_ACCOUNT', value: m[1], start: m.index + (m[0].length - m[1].length), end: m.index + m[0].length, scope: 'REGIONAL', meta: 'Financial Account Ledger' });
+      }
+
+      // 12. Phone
+      const phoneRegex = /(?:(?:\+91|91|0|\+1)[\s\-]?)?(\b[6-9][0-9]{9}\b|\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})/g;
+      while ((m = phoneRegex.exec(text)) !== null) {
+        matches.push({ type: 'PHONE_NUMBER', value: m[0].trim(), start: m.index, end: m.index + m[0].trim().length, scope: 'GLOBAL', meta: 'Global/Regional E.164 Contact' });
+      }
+
+      // Sort & resolve overlaps
+      matches.sort((a, b) => a.start - b.start || (b.end - b.start) - (a.end - a.start));
+      const resolved = [];
+      let lastEnd = -1;
+      for (const item of matches) {
+        if (item.start >= lastEnd) {
+          resolved.push(item);
+          lastEnd = item.end;
+        }
+      }
+      return resolved;
+    }
+
+    function triggerPardaShield() {
+      const text = document.getElementById('rawDocInput').value;
+      if (!text) {
+        document.getElementById('sanitizedView').innerText = '';
+        document.getElementById('telemetryStream').innerHTML = '<div style="color: var(--text-muted); font-size: 0.82rem; text-align: center; margin-top: 2rem;">No text entered.</div>';
+        document.getElementById('shieldCountTag').innerText = '0 Detected';
+        return;
+      }
+
+      const matches = scanPardaEntities(text);
+      currentVault = {};
+
+      const counters = {};
+      let result = '';
+      let lastIdx = 0;
+
+      matches.forEach(m => {
+        result += text.substring(lastIdx, m.start);
+        counters[m.type] = (counters[m.type] || 0) + 1;
+        const idx = counters[m.type];
+        const token = `<${m.type}_${idx}>`;
+        currentVault[token] = m.value;
+
+        if (activeMaskStyle === 'TOKEN') {
+          result += token;
+        } else if (activeMaskStyle === 'BLACKOUT') {
+          result += '█'.repeat(Math.max(m.value.length, 4));
+        } else if (activeMaskStyle === 'SYNTHETIC') {
+          result += `[REDACTED_${m.type}]`;
+        }
+        lastIdx = m.end;
+      });
+      result += text.substring(lastIdx);
+
+      // Update UI
+      document.getElementById('sanitizedView').innerText = result;
+      document.getElementById('shieldCountTag').innerText = `${matches.length} Shielded`;
+
+      // Telemetry list
+      const stream = document.getElementById('telemetryStream');
+      if (matches.length === 0) {
+        stream.innerHTML = '<div style="color: var(--accent-green); font-size: 0.85rem; text-align: center; margin-top: 2rem;">✓ No sensitive PII or credentials detected.</div>';
+      } else {
+        stream.innerHTML = matches.map(m => {
+          const tagClass = m.type.includes('KEY') ? 'tag-secret' : (m.scope === 'GLOBAL' ? 'tag-global' : 'tag-regional');
+          return `
+            <div class="entity-card">
+              <div class="entity-card-top">
+                <span class="entity-tag ${tagClass}">${m.type}</span>
+                <span style="font-size: 0.72rem; color: var(--accent-green); font-weight: 600;">VEILED</span>
+              </div>
+              <div class="entity-val">${escapeHtml(m.value)}</div>
+              <div class="entity-sub">${m.meta}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Update simulated prompt
+      document.getElementById('wireSnippet').innerText = result.substring(0, 180) + '...';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function clearDocument() {
+      document.getElementById('rawDocInput').value = '';
+      triggerPardaShield();
+    }
+
+    function copyRaw() {
+      navigator.clipboard.writeText(document.getElementById('rawDocInput').value);
+      alert('Original document copied!');
+    }
+
+    function copySanitized() {
+      navigator.clipboard.writeText(document.getElementById('sanitizedView').innerText);
+      alert('Sanitized text copied!');
+    }
+
+    function downloadSanitized() {
+      const text = document.getElementById('sanitizedView').innerText;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'parda_sanitized_document.txt';
+      a.click();
+    }
+
+    function simulateCloudCall() {
+      const sanitized = document.getElementById('sanitizedView').innerText;
+      if (!sanitized) {
+        alert('Please enter or select a document first!');
+        return;
+      }
+
+      document.getElementById('wireSnippet').innerText = 
+        `System: You are an enterprise AI analysis agent.\nUser: Summarize and inspect compliance for:\n\n${sanitized.slice(0, 200)}...`;
+
+      // Simulated cloud reply with placeholders
+      const simulatedCloudReply = 
+        `Audit Summary: The document references primary account credentials. 
+Payment was attempted via <CREDIT_CARD_1> and bank routing <BANK_IFSC_1> / <BANK_ACCOUNT_1>. 
+Notice has been sent to contact <EMAIL_ADDRESS_1> and authorized phone <PHONE_NUMBER_1>. 
+All operations are mapped to registered identity <PAN_CARD_1> / <AADHAAR_CARD_1>.`;
+
+      document.getElementById('cloudSnippet').innerText = simulatedCloudReply;
+
+      // Local de-anonymization
+      let restored = simulatedCloudReply;
+      for (const [token, orig] of Object.entries(currentVault)) {
+        restored = restored.split(token).join(orig);
+      }
+      document.getElementById('localRestoredSnippet').innerText = restored;
+    }
+
+    window.onload = () => {
+      loadDocPreset('global');
+    };
+  </script>
+</body>
+</html>
